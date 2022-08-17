@@ -1,3 +1,5 @@
+import { DataManager } from "../../helpers/dataManager.helper";
+
 export class SeanceDetailIndexView {
 
     models = null;
@@ -14,7 +16,7 @@ export class SeanceDetailIndexView {
     };
     
     render = async () => {
-        const { seance, film } = this.models;
+        const { seance, film , resa } = this.models;
         const resumer = `<div class="card my-5 mx-3">
         <div class="card-header">
         ${film.title}
@@ -32,8 +34,8 @@ export class SeanceDetailIndexView {
         <div class="row mx-5">
         <div class="col-6 ">
             <div class="input-group input-group-sm  mb-3">
-                <span class="input-group-text" id="inputGroup-sizing-sm">Nom</span>
-                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                <span class="input-group-text">Nom</span>
+                <input type="text" id="name" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
             </div>
         </div>
         <div class="col-6">
@@ -46,31 +48,40 @@ export class SeanceDetailIndexView {
         <option value="5">5</option>
         <option value="6">6</option>
     </select>
+    <div class="d-flex justify-content-start m-5 ">
+        </div>
+        <h3 class="text-success mx-5"> prix Total = <span class="pri">${seance.price}</span> €/TTC </h3>
+        <button class = "btn btn-success w-50" id="reserver">Reserver !</button>
         </div>
       
-      <div class="d-flex justify-content-end m-5">
-      <button class = "btn btn-success" id="reserver">Reserver !</button>
-      </div>
       `;
       
-      const viewhtml= resumer + formulaireresa 
+      const viewhtml= resumer + formulaireresa
       const pagehtml  = document.createElement('div');
       pagehtml.innerHTML=viewhtml
       
       let prixtt=seance.price;
       const nbPlace = pagehtml.querySelector('#nbPlace');
-      let prixFinal =`<h3 class="text-success mx-5"> prix Total = ${prixtt} €/TTC </h3>` 
+      let prixFinal =  pagehtml.querySelector('.pri')
+      let reserver = pagehtml.querySelector('#reserver') 
+      reserver.onclick =()=>{
+        let nom = pagehtml.querySelector('#name').value
+        resa.customer=nom;
+        resa.nbPlace=nbPlace.value
+        
+        resa.seance_id=seance.id;
+        DataManager.insert(resa)
+        alert('reservation enregistré !')
 
-      const reserver = pagehtml.querySelector('#reserver') 
-        reserver.onclick =()=>{
-            console.log('ok')
-        }
 
-    nbPlace.onchange=()=>{
+      }
+      
+      nbPlace.onchange=()=>{
         prixtt = (nbPlace.value*seance.price)
-        }
-     
-    pagehtml.innerHTML+=prixFinal
+        prixFinal.innerText=`${prixtt}`
+      }
+      
+    
         
     return pagehtml
 };

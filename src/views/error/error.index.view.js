@@ -28,5 +28,8 @@ export class ErrorIndexView {
                 </div>
             </section>
             `;
-  };
+  
+          };
+          
+
 }
